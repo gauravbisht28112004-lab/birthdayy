@@ -16,12 +16,33 @@ const memories = [
   "For the way your presence makes life feel lighter."
 ];
 
+function HeartRain({ count = 36 }) {
+  return (
+    <div className="heart-rain" aria-hidden="true">
+      {Array.from({ length: count }, (_, index) => (
+        <span
+          key={index}
+          style={{
+            "--left": `${(index * 29) % 100}%`,
+            "--delay": `${(index % 12) * -0.55}s`,
+            "--duration": `${4.6 + (index % 7) * 0.45}s`,
+            "--size": `${0.55 + (index % 5) * 0.12}rem`
+          }}
+        >
+          <FaHeart />
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export default function App() {
   const [musicOn, setMusicOn] = useState(false);
   const [audioContext, setAudioContext] = useState(null);
   const [giftOpen, setGiftOpen] = useState(false);
   const [memoryGiftOpen, setMemoryGiftOpen] = useState(false);
   const [finalMessageOpen, setFinalMessageOpen] = useState(false);
+  const [heartSlideOpen, setHeartSlideOpen] = useState(false);
   const melodyTimerRef = useRef(null);
   const gainRef = useRef(null);
 
@@ -140,6 +161,16 @@ export default function App() {
     });
   };
 
+  const openHeartSlide = () => {
+    setHeartSlideOpen(true);
+    confetti({
+      particleCount: 80,
+      spread: 65,
+      origin: { y: 0.7 },
+      colors: ["#f7b7c8", "#f5d78e", "#ffffff", "#c7a6ff"]
+    });
+  };
+
   return (
     <main className="soft-page">
       <div className="soft-backdrop" aria-hidden="true" />
@@ -190,6 +221,7 @@ export default function App() {
           viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: 0.7 }}
         >
+          <HeartRain count={28} />
           <span>Dear Mannu,</span>
           <p>
             I did not want this to feel like just another birthday wish. I wanted it to feel like a quiet little place
@@ -240,6 +272,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
+              <HeartRain count={34} />
               <iframe
                 title="JVKE - her official lyric video"
                 src="https://www.youtube.com/embed/f5-IY_Ja1RM?autoplay=1&rel=0&modestbranding=1"
@@ -288,6 +321,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
+              <HeartRain count={34} />
               <video src="/edited-gift.mp4" controls autoPlay playsInline />
             </motion.div>
           )}
@@ -347,6 +381,7 @@ export default function App() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.6 }}
           >
+            <HeartRain count={30} />
             <span>For you, Mannu</span>
             <p>
               I know we are apart, and I know things have not worked the way we once wished they would. But you are
@@ -360,6 +395,46 @@ export default function App() {
             <button className="primary-link as-button" onClick={sendLove}>
               Send birthday love
             </button>
+          </motion.article>
+        )}
+      </section>
+
+      <section className="heart-ending">
+        {!heartSlideOpen ? (
+          <motion.div
+            className="heart-invitation"
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <p className="small-line">From my heart</p>
+            <button className="heart-button" onClick={openHeartSlide} aria-label="Open message from my heart">
+              <FaHeart />
+            </button>
+            <p>Click the heart.</p>
+          </motion.div>
+        ) : (
+          <motion.article
+            className="heart-slide"
+            initial={{ opacity: 0, y: 34, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.7 }}
+          >
+            <HeartRain count={42} />
+            <span>From my heart</span>
+            <p>I don't know when we'll meet again...</p>
+            <p>Or maybe we never will.</p>
+            <p>But one thing is still true today —</p>
+            <p>The peace I felt with you, I never found with anyone else.</p>
+            <p>Everyone says our story has ended...</p>
+            <p>But deep inside, I feel there are still pages left unwritten.</p>
+            <p>Some people become memories, yet somehow they never stop living in our hearts.</p>
+            <p>And no matter how far life takes us, a part of me will always smile when I think of you.</p>
+            <strong>Happy Birthday, Mannu ❤️</strong>
+            <p>May your life be filled with happiness, love, and beautiful moments.</p>
+            <p className="last-line">
+              But in the end, I will see you with someone else, but you will see me with everything I told you I'd have.
+            </p>
           </motion.article>
         )}
       </section>
